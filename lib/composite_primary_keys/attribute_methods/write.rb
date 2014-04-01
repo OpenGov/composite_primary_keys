@@ -2,6 +2,10 @@ module ActiveRecord
   module AttributeMethods
     module Write
       def write_attribute(attr_name, value)
+        puts
+        puts attr_name
+        puts value
+        puts
         # CPK
         if attr_name.kind_of?(Array)
           value = [nil]*attr_name.length if value.nil?
