@@ -38,7 +38,11 @@ module CompositePrimaryKeys
         #   Array -> [1,2]
         #   CompositeKeys -> [1,2]
 
-        id = id.id if ::ActiveRecord::Base === id
+        if id.method_defined?(:ids)
+          id = id.ids
+        elsif id.method_defined?(:id)
+          id = id.id
+        end
 
         join_dependency = construct_join_dependency_for_association_find
         relation = construct_relation_for_association_find(join_dependency)

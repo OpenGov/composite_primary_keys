@@ -28,7 +28,7 @@ module CompositePrimaryKeys
 
         while records.any?
           records_size = records.size
-          primary_key_offset = records.last.id
+          primary_key_offset = records.last.ids
 
           yield records
 

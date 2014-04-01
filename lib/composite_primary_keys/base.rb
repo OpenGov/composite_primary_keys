@@ -104,13 +104,10 @@ module ActiveRecord
     end
 
     module CompositeInstanceMethods
-      # A model instance's primary keys is always available as model.ids
-      # whether you name it the default 'id' or set it to something else.
-      def id
+      def ids
         attr_names = self.class.primary_keys
         ::CompositePrimaryKeys::CompositeKeys.new(attr_names.map { |attr_name| read_attribute(attr_name) })
       end
-      alias_method :ids, :id
 
       def ids_hash
         self.class.primary_key.zip(ids).inject(Hash.new) do |hash, (key, value)|
@@ -126,13 +123,13 @@ module ActiveRecord
       end
 
       # Sets the primary ID.
-      def id=(ids)
+      def ids=(ids)
         ids = CompositePrimaryKeys::CompositeKeys.parse(ids)
         unless ids.length == self.class.primary_keys.length
-          raise "#{self.class}.id= requires #{self.class.primary_keys.length} ids"
+          raise "#{self.class}.ids= requires #{self.class.primary_keys.length} ids"
         end
         [self.class.primary_keys, ids].transpose.each {|key, an_id| write_attribute(key , an_id)}
-        id
+        self.ids
       end
 
       def ==(comparison_object)

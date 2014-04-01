@@ -18,13 +18,18 @@ module ActiveRecord
           #  join_table[reflection.foreign_key]             => owner.id,
           #  join_table[reflection.association_foreign_key] => record.id
           #)
+
+          owner_id = owner.method_defined?(:ids) ? owner.ids : owner.id
+
           join_values = Hash.new
-          Array(reflection.foreign_key).zip(Array(owner.id)) do |name, value|
+          Array(reflection.foreign_key).zip(Array(owner_id)) do |name, value|
             attribute = join_table[name]
             join_values[attribute] = value
           end
 
-          Array(reflection.association_foreign_key).zip(Array(record.id)) do |name, value|
+          record_id = record.method_defined?(:ids) ? record.ids : record.id
+
+          Array(reflection.association_foreign_key).zip(Array(record_id)) do |name, value|
             attribute = join_table[name]
             join_values[attribute] = value
           end
@@ -47,7 +52,9 @@ module ActiveRecord
           #  and(relation[reflection.association_foreign_key].in(records.map { |x| x.id }.compact))
           #).compile_delete
 
-          predicate1 = cpk_id_predicate(relation, Array(reflection.foreign_key), Array(owner.id))
+          owner_id = owner.method_defined?(:ids) ? owner.ids : owner.id
+
+          predicate1 = cpk_id_predicate(relation, Array(reflection.foreign_key), Array(owner_id))
           predicate2 = cpk_in_predicate(relation, Array(reflection.association_foreign_key), records.map { |x| x.id }) unless records == :all
           stmt = relation.where(predicate1.and(predicate2)).compile_delete
 

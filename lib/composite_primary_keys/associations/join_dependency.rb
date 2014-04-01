@@ -25,7 +25,8 @@ module ActiveRecord
       protected
 
       def construct_association(record, join_part, row)
-        return if record.id.to_s != join_part.parent.record_id(row).to_s
+        record_id = record.method_defined?(:ids) ? record.ids : record.id
+        return if record_id.to_s != join_part.parent.record_id(row).to_s
 
         macro = join_part.reflection.macro
         if macro == :has_one
