@@ -10,8 +10,10 @@ module ActiveRecord
           end
 
           attr_name[0..-2].each_with_index do |prop, index|
-            prop_value = value[index]
-            unless prop_value.nil? || prop_value == read_attribute(prop)
+            new_value = value[index]
+            old_value = read_attribute(prop)
+
+            if new_value && old_value && new_value != old_value
               raise "Assignment would augment the object's primary key"
             end
           end
