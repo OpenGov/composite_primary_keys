@@ -121,7 +121,7 @@ module ActiveRecord
 
       def id_before_type_cast
         self.class.primary_keys.map do |key|
-          self.send("#{key.to_s}_before_type_cast")
+          self.read_attribute_before_type_cast("#{key.to_s}")
         end
       end
 

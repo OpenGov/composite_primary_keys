@@ -9,14 +9,21 @@ module ActiveRecord
             raise "Number of attr_names and values do not match"
           end
 
+          writable_attributes = {}
+
           attr_name[0..-2].each_with_index do |prop, index|
             new_value = value[index]
             old_value = read_attribute(prop)
 
-            if new_value && old_value && new_value != old_value
-              raise "Assignment would augment the object's primary key"
+            if new_value
+              if old_value
+                raise "Assignment would augment the object's primary key" if new_value != old_value
+              else
+                writable_attributes[prop] = new_value
+              end
             end
           end
+          writable_attributes.each { |k, v| write_attribute(k, v) }
 
           attr_name = attr_name[-1]
           value = value[-1]
