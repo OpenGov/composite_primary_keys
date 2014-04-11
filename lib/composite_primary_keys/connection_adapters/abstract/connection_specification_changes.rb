@@ -6,20 +6,20 @@ module ActiveRecord
       end
     end
     
-    def self.establish_connection(spec = ENV["DATABASE_URL"])
-      resolver = ConnectionSpecification::Resolver.new spec, configurations
-      spec = resolver.spec
-      
-      # CPK
-      load_cpk_adapter(spec.config[:adapter])
-      
-      unless respond_to?(spec.adapter_method)
-        raise AdapterNotFound, "database configuration specifies nonexistent #{spec.config[:adapter]} adapter"
-      end
-
-      remove_connection
-      connection_handler.establish_connection name, spec
-    end
+    #def self.establish_connection(spec = ENV["DATABASE_URL"])
+    #  resolver = ConnectionSpecification::Resolver.new spec, configurations
+    #  spec = resolver.spec
+    #  
+    #  # CPK
+    #  load_cpk_adapter(spec.config[:adapter])
+    #  
+    #  unless respond_to?(spec.adapter_method)
+    #    raise AdapterNotFound, "database configuration specifies nonexistent #{spec.config[:adapter]} adapter"
+    #  end
+    #
+    #  remove_connection
+    #  connection_handler.establish_connection name, spec
+    #end
 
     class << self
       # Returns the connection currently associated with the class. This can
