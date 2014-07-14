@@ -10,7 +10,13 @@ module ActiveModel
 
     def primary_key_was
       ids_hash.keys.inject(Hash.new) do |result, attribute_name|
-        result[attribute_name] = attribute_was(attribute_name.to_s)
+        prev_val = attribute_was(attribute_name.to_s)
+        if attribute_name == 'id'
+          id_index = self.class.primary_key.index('id')
+          result['id'] = prev_val[id_index]
+        else
+          result[attribute_name] = prev_val
+        end
         result
       end
     end
